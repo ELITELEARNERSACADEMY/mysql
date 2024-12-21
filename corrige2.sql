@@ -1,0 +1,94 @@
+/*solution pour la Deuxiem TP*/
+
+/* Colle de TP: Base de Donnees*/
+     
+/*creer la base de donnee*/
+CREATE  DATABASE  SERVICE_DB;
+
+/*choisir la base des donnees*/
+USE SERVICE_DB;     
+  
+/*Q1*/
+
+/*creer le tableu*/
+CREATE TABLE CLIENT(NumCli INT , Nom VARCHAR(10),Solde DECIMAL(9,2),Ville VARCHAR(10), PRIMARY KEY(NumCli) );
+
+/*Insertion du valeur dans la tableu*/
+INSERT INTO CLIENT(NumCli, Nom,Solde,Ville)
+VALUES(43,'CDG',10000,'RABAT'),
+(61,'OCP',56000,'KHOURIBGA'),
+(98,'INWI',6000,'CASABLANCA')
+,(88,'ACIMA',92000,'RABAT')
+
+
+CREATE TABLE SERVICE(IdSer INT AUTO_INCREMENT,  NomSer VARCHAR(20), Type VARCHAR(20), Agent VARCHAR(10), PRIMARY KEY(IdSer))
+
+INSERT INTO SERVICE( NomSer, Type, Agent)
+VALUES('Audit','Finance','Amine'),
+('Cmptabilite','Fiscalite','Ahmed'),
+('Formation','Education','Siham'),
+('Publicite','Communication','Hicham')
+
+CREATE TABLE   INTERVENTION(Idint INT AUTO_INCREMENT , Numcli INT , IdSer INT , DateI DATE ,Prix DECIMAL(9,2), PRIMARY KEY(Idint), CONSTRAINT FOREIGN KEY(Numcli) REFERENCES CLIENT(NumCli), CONSTRAINT FOREIGN KEY(IdSer) REFERENCES SERVICE(IdSer))
+
+
+INSERT INTO    INTERVENTION(Numcli, IdSer, DateI,Prix)
+VALUES(43,1,'2019-01-3',12000),
+(88,1,'2019-07-5',44000),
+(98,3,'2019-04-29',9000),
+(88,4,'2019-05-4',8800)
+/*Q3*/
+ALTER TABLE CLIENT 
+ADD CONSTRAINT Solde CHECK(Solde > 5000)
+
+/*Q4*/
+DELETE CLIENT
+FROM CLIENT 
+WHERE Ville = 'KHOURIBGA'
+
+/*Q5*/
+SELECT NomSer 
+FROM SERVICE NATURAL JOIN  INTERVENTION
+ORDER  BY Prix   DESC
+
+/*Q6*/
+SELECT NomSer 
+FROM SERVICE NATURAL JOIN  INTERVENTION
+WHERE Prix > 40000
+
+/*Q7*/
+SELECT NomSer 
+FROM SERVICE NATURAL JOIN  INTERVENTION
+WHERE DateI like '%-01%' and Type = 'Finance'
+
+/*Q8*/
+SELECT Nom
+FROM CLIENT NATURAL JOIN INTERVENTION
+WHERE Solde < Prix
+
+/*Q9*/
+SELECT Nom 
+FROM CLIENT JOIN INTERVENTION
+ON CLIENT.Numcli = INTERVENTION.Numcli
+JOIN SERVICE 
+ON INTERVENTION.IdSer = SERVICE.IdSer
+WHERE Ville = 'Casablanca'  and Type = 'Education'
+
+
+/*Q10*/
+SELECT NomSer 
+FROM CLIENT JOIN INTERVENTION
+ON CLIENT.Numcli = INTERVENTION.Numcli
+JOIN SERVICE 
+ON INTERVENTION.IdSer = SERVICE.IdSer
+WHERE Ville <> 'Rabat'  and Agent  like  'H%'
+
+
+
+
+
+
+
+
+
+
